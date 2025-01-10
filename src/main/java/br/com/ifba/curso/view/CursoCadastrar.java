@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CursoCadastrar extends javax.swing.JFrame {
-    @Autowired
     private CursoListar cursoListar;
     
     @Autowired
@@ -23,13 +22,9 @@ public class CursoCadastrar extends javax.swing.JFrame {
      * Creates new form CursoCadastrar
      * @param cursoListar
      */
+    @Autowired
     public CursoCadastrar(CursoListar cursoListar) {
         this.cursoListar = cursoListar;
-        initComponents();
-    }
-    
-    public CursoCadastrar() {
-        
         initComponents();
     }
 
@@ -104,6 +99,7 @@ public class CursoCadastrar extends javax.swing.JFrame {
         
             //Atualiza a tabela de cursos e fecha a tela de cadastro
             cursoListar.carregarTabela();
+            
             this.dispose();
         }
     }//GEN-LAST:event_btnSalvarActionPerformed

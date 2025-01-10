@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +17,11 @@ import org.springframework.stereotype.Component;
 public class CursoListar extends javax.swing.JFrame {
     @Autowired
     private CursoIController cursoController;
+
+    @Autowired
+    private ApplicationContext context;
     
+    public Long idListar;
     /**
      * Creates new form CursoListar
      */
@@ -60,7 +65,7 @@ public class CursoListar extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Nome", "ID", "Código do curso", "Ativo"
+                "Nome", "ID", "Código do curso", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -133,10 +138,10 @@ public class CursoListar extends javax.swing.JFrame {
             //Caso a resposta seja sim, remove o curso do banco de dados
             if(resposta == JOptionPane.YES_OPTION) {
                 //Recebe o valor do id selecionado pelo usuário
-                Long id = (Long) tblListaCurso.getValueAt(tblListaCurso.getSelectedRow(), 1);
+                Long idRemover = (Long) tblListaCurso.getValueAt(tblListaCurso.getSelectedRow(), 1);
             
                 //Procura o curso selecionado pelo id no banco de dados e deleta
-                cursoController.delete(cursoController.findById(id));
+                cursoController.delete(cursoController.findById(idRemover));
             
                 //Atualiza a tabela
                 carregarTabela();
@@ -151,7 +156,7 @@ public class CursoListar extends javax.swing.JFrame {
 
     private void btnCadastrarCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarCursoActionPerformed
         //Abre a janela de cadastro do curso ao clicar no botão btnCadastrarCurso
-        CursoCadastrar cursoCadastrar = new CursoCadastrar(this);
+        CursoCadastrar cursoCadastrar = context.getBean(CursoCadastrar.class);
         cursoCadastrar.setDefaultCloseOperation(CursoCadastrar.DISPOSE_ON_CLOSE);
         cursoCadastrar.setVisible(true);
     }//GEN-LAST:event_btnCadastrarCursoActionPerformed
@@ -160,8 +165,11 @@ public class CursoListar extends javax.swing.JFrame {
         // Verifica se um curso foi selecionado
         if(tblListaCurso.getSelectedRow() != -1) {
             //Guarda o id do curso selecionado e envia para a tela cursoEditar
-            Long id = (Long) tblListaCurso.getValueAt(tblListaCurso.getSelectedRow(), 1);
-            CursoEditar cursoEditar = new CursoEditar(this, id);
+            idListar = (Long) tblListaCurso.getValueAt(tblListaCurso.getSelectedRow(), 1);
+            
+            CursoEditar cursoEditar = context.getBean(CursoEditar.class);
+            cursoEditar.carregarCurso();
+            
             cursoEditar.setDefaultCloseOperation(CursoEditar.DISPOSE_ON_CLOSE);
             cursoEditar.setVisible(true);
             

@@ -2,7 +2,6 @@ package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
-import jakarta.annotation.PostConstruct;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CursoEditar extends javax.swing.JFrame {
-    private final CursoListar cursoListar;
-    private final Long id;
+    
+    private CursoListar cursoListar;
     
     @Autowired
     private CursoIController cursoController;
@@ -23,17 +22,12 @@ public class CursoEditar extends javax.swing.JFrame {
     /**
      * Creates new form CursoEditar
      * @param cursoListar
-     * @param id
      */
-    public CursoEditar(CursoListar cursoListar, Long id) {
+
+    @Autowired
+    public CursoEditar(CursoListar cursoListar) {
         this.cursoListar = cursoListar;
-        this.id = id;
         initComponents();
-    }
-    
-    @PostConstruct
-    public void init() {
-        carregarCurso();
     }
 
     /**
@@ -86,14 +80,23 @@ public class CursoEditar extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    //Caarrega as informações do curso a ser editado ao abrir a tela
-    private void carregarCurso() {
-        Curso curso;
-        curso = cursoController.findById(id);
+    //Carrega as informações do curso a ser editado ao abrir a tela
+    public void carregarCurso() {
+        Long id = cursoListar.idListar;
+        if(id != null) {
+            Curso curso = cursoController.findById(id);
         
-        txtNome.setText(curso.getNome());
-        txtCodCurso.setText(curso.getCodigoCurso());
-        comboStatus.setSelectedItem(curso.isAtivo() ? "ATIVO" : "INATIVO");
+            txtNome.setText(curso.getNome());
+            txtCodCurso.setText(curso.getCodigoCurso());
+            comboStatus.setSelectedItem(curso.isAtivo() ? "ATIVO" : "INATIVO");
+        } else {
+            JOptionPane.showMessageDialog(
+                    null, 
+                    "ID NULO\n", 
+                    "ERRO", 
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
     
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
@@ -110,6 +113,7 @@ public class CursoEditar extends javax.swing.JFrame {
             Curso curso = new Curso();
             curso.setNome(txtNome.getText());
             curso.setCodigoCurso(txtCodCurso.getText());
+            Long id = cursoListar.idListar;
             curso.setId(id);
 
             //Verifica a opção escolhida pelo usuário e coloca o curso como ativo ou inativo

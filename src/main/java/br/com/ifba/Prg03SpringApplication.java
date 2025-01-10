@@ -1,6 +1,7 @@
 package br.com.ifba;
 
 import br.com.ifba.curso.view.CursoListar;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -9,11 +10,13 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class Prg03SpringApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context =
-                new SpringApplicationBuilder(Prg03SpringApplication.class)
-                        .headless(false).run(args);
+        System.setProperty("java.awt.headless", "false");
+        SpringApplication.run(Prg03SpringApplication.class, args);
+                
+        ConfigurableApplicationContext context = new SpringApplicationBuilder(Prg03SpringApplication.class)
+                                                        .headless(false).run(args);
 
-        CursoListar telaCursoListar = context.getBean(CursoListar.class);
-        telaCursoListar.setVisible(true);
+        CursoListar telaListar = context.getBean(CursoListar.class);
+        telaListar.setVisible(true);
     }
 }
