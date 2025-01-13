@@ -1,7 +1,7 @@
 package br.com.ifba.curso.service;
 
-import br.com.ifba.curso.dao.CursoIDao;
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.curso.repository.CursoRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CursoService implements CursoIService {
     @Autowired
-    private CursoIDao cursoDao;
+    private CursoRepository cursoRepository;
     
     @Override
     public Curso save(Curso curso) throws RuntimeException{
@@ -28,14 +28,14 @@ public class CursoService implements CursoIService {
             
         //Se o curso não for nulo e não tiver ID, então ele é inserido no banco de dados
         } else {
-            return cursoDao.save(curso);
+            return cursoRepository.save(curso);
         }
     }
 
     @Override
     public List<Curso> findAll() {
         //Retorna todos os cursos encontrados no banco de dados
-        return cursoDao.findAll();
+        return cursoRepository.findAll();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CursoService implements CursoIService {
             
         //Se o curso não for nulo, então ele é atualizado no banco de dados
         } else {
-            return cursoDao.update(curso);
+            return cursoRepository.save(curso);
         }
     }
 
@@ -55,9 +55,9 @@ public class CursoService implements CursoIService {
         //Verifica se o objeto curso é nulo, se for, lança uma exceção informando que os dados não foram preenchidos
         if(curso == null){
             throw new RuntimeException ("Dados do curso nao preenchidos");
-        //Exclui o curso do banco de dados utilizando o cursoDao
+        //Exclui o curso do banco de dados utilizando o cursoRepository
         } else {
-            cursoDao.delete(curso);
+            cursoRepository.delete(curso);
         }
     }
 
@@ -65,11 +65,11 @@ public class CursoService implements CursoIService {
     public Curso findById(Long id) {
         // Verifica se o ID fornecido é nulo, caso seja, lança uma exceção informando que o ID não foi preenchido
         if(id == null){
-            throw new RuntimeException ("ID nao preenchido");
+            throw new RuntimeException ("ID nao preenchido.");
             
-        //Retorna o curso encontrado pelo ID utilizando o cursoDao
+        //Retorna o curso encontrado pelo ID utilizando o cursoRepository ou uma exceção caso o curso não seja encontrado
         } else {
-            return cursoDao.findById(id);
+            return cursoRepository.findById(id).orElseThrow(() -> new RuntimeException("Curso nao encontrado."));
         }
     }
 
@@ -79,8 +79,8 @@ public class CursoService implements CursoIService {
         if(nome == null || nome.trim().isEmpty()){
             throw new RuntimeException ("Nome não preenchido");
         } else {
-            //Retorna uma lista de cursos encontrados pelo nome utilizando o cursoDao
-            return cursoDao.findByNome(nome);
+            //Retorna uma lista de cursos encontrados pelo nome utilizando o cursoRepository
+            return cursoRepository.findByNome(nome);
         }
     }
 }
