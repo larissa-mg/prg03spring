@@ -15,7 +15,7 @@ public class Prg03SpringApplication {
                 
         ConfigurableApplicationContext context = new SpringApplicationBuilder(Prg03SpringApplication.class)
                                                         .headless(false).run(args);
-
+        
         CursoListar telaListar = context.getBean(CursoListar.class);
         telaListar.setVisible(true);
     }

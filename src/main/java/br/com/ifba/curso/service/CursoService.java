@@ -2,7 +2,9 @@ package br.com.ifba.curso.service;
 
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.repository.CursoRepository;
+import ch.qos.logback.classic.Logger;
 import java.util.List;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +15,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CursoService implements CursoIService {
+    
     @Autowired
     private CursoRepository cursoRepository;
+    
+    private static final Logger log = (Logger) LoggerFactory.getLogger(CursoService.class);
     
     @Override
     public Curso save(Curso curso) throws RuntimeException{
@@ -28,6 +33,7 @@ public class CursoService implements CursoIService {
             
         //Se o curso não for nulo e não tiver ID, então ele é inserido no banco de dados
         } else {
+            log.info("Salvando o Objeto Curso!");
             return cursoRepository.save(curso);
         }
     }
@@ -46,6 +52,7 @@ public class CursoService implements CursoIService {
             
         //Se o curso não for nulo, então ele é atualizado no banco de dados
         } else {
+            log.info("Editando o Objeto Curso!");
             return cursoRepository.save(curso);
         }
     }
@@ -57,6 +64,7 @@ public class CursoService implements CursoIService {
             throw new RuntimeException ("Dados do curso nao preenchidos");
         //Exclui o curso do banco de dados utilizando o cursoRepository
         } else {
+            log.info("Deletando o Objeto Curso!");
             cursoRepository.delete(curso);
         }
     }

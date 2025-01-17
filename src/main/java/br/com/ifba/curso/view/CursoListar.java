@@ -22,12 +22,12 @@ public class CursoListar extends javax.swing.JFrame {
     private ApplicationContext context;
     
     public Long idListar;
+
     /**
      * Creates new form CursoListar
      */
     public CursoListar() {
         initComponents();
-        
     }
 
     @PostConstruct
